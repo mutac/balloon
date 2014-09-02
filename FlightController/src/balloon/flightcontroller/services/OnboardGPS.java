@@ -83,13 +83,26 @@ public class OnboardGPS implements balloon.flightcontroller.core.Service, Locati
   
   private boolean resetLocationListener()
   { 
+    Log.Info("Initializing Onboard GPS provider");
+    
     mLocationManager.addGpsStatusListener(this);
     mLocationManager.addNmeaListener(this);
     
     mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
         mMinIntervalMs, mMinDistanceBeforeUpdateM, this);
     
-    return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    boolean enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    
+    if (enabled)
+    {
+      Log.Info("Onboard GPS provider enabled"); 
+    }
+    else
+    {
+      Log.Error("Onboard GPS provider is DISABLED!");
+    }
+    
+    return enabled;
   }
   
   LocationManager mLocationManager;

@@ -2,8 +2,11 @@ package balloon.flightcontroller.core;
 
 import java.util.Calendar;
 
-public abstract class Logger 
+public interface Logger 
 {
-  public void info(String origin, Object... messages) {}
-  public void info(String originn, long timestampOverride, Object... messages) {}
+  public void info(String channel, Object... messages);
+  public void info(String channel, long timestampOverride, Object... messages);
+  
+  public void error(String channel, Object... messages);
+  public void error(String channel, long timestampOverride, Object... messages);
 }

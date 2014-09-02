@@ -1,7 +1,6 @@
 package balloon.flightcontroller.services;
 
 import balloon.flightcontroller.core.*;
-import java.lang.reflect.*;
 
 public class Log implements Service
 {
@@ -13,44 +12,56 @@ public class Log implements Service
     return sInstance;
   }
   
-  public static void SetLogOriginClassname(boolean enable)
+  public static void SetLogchannelClassname(boolean enable)
   {
     if (sInstance != null)
-      sInstance.mLogOrigin = enable;
+      sInstance.mLogChannel = enable;
   }
   
   public static void Info(Object... messages)
   {
     if (sInstance != null)
-      sInstance.mLogger.info(GetOrigin(), messages);
+      sInstance.mLogger.info(GetChannel(), messages);
   }
   
   public static void Info(long timestampOverride, Object... messages)
   {
     if (sInstance != null)
-      sInstance.mLogger.info(GetOrigin(), timestampOverride, messages);
+      sInstance.mLogger.info(GetChannel(), timestampOverride, messages);
+  }
+  
+  public static void Error(Object... messages)
+  {
+    if (sInstance != null)
+      sInstance.mLogger.error(GetChannel(), messages);
+  }
+  
+  public static void Error(long timestampOverride, Object... messages)
+  {
+    if (sInstance != null)
+      sInstance.mLogger.error(GetChannel(), timestampOverride, messages);
   }
   
   private Log(Logger logger)
   {
     mLogger = logger;
+    mLogChannel = true;
   }
   
-  private static String GetOrigin()
+  private static String GetChannel()
   {
-    if (sInstance != null && sInstance.mLogOrigin)
+    if (sInstance != null && sInstance.mLogChannel)
     {
       StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-      StackTraceElement caller;
-      if (stack != null && stack.length > 3)
+      if (stack != null && stack.length >= 5)
       {
         // The top two stack elements are to call into getStackTrace()
-        caller = stack[2];
+        StackTraceElement caller = stack[4];
         return caller.getClassName();
       }
     }
 
-    return "baloon.flightcontroller.Anonymous";
+    return "balloon.flightcontroller";
   }
   
   public boolean start()
@@ -64,7 +75,7 @@ public class Log implements Service
     return "Log";
   }
   
-  boolean mLogOrigin;
+  boolean mLogChannel;
   Logger mLogger;
   
   static Log sInstance;
