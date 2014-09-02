@@ -1,12 +1,12 @@
-package services;
+package balloon.flightcontroller.services;
 
-import core.*;
+import balloon.flightcontroller.core.*;
 
 public class Log implements Service
 {
-  public Log Create(Logger logger)
+  public static Log Create(Logger logger)
   {
-    if (sInstance != null)
+    if (sInstance == null)
       sInstance = new Log(logger);
     
     return sInstance;
@@ -14,6 +14,7 @@ public class Log implements Service
   
   public boolean start()
   {
+    Info(getName(), "Log started");
     return true;
   }
   

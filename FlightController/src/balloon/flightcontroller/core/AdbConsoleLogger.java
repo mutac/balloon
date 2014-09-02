@@ -1,12 +1,12 @@
-package core;
+package balloon.flightcontroller.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import core.*;
+import balloon.flightcontroller.core.*;
 import android.util.*;
 
-public class AdpConsoleLogger extends Logger
+public class AdbConsoleLogger extends Logger
 {  
   //@Override
   public void info(String origin, Object... messages) 

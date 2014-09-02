@@ -1,14 +1,14 @@
-package services;
+package balloon.flightcontroller.services;
 
 import android.content.*;
 import android.os.*;
 import android.location.*;
 
-public class OnboardGPS implements core.Service, LocationListener, GpsStatus.Listener //, GpsStatus.NmeaListener
+public class OnboardGPS implements balloon.flightcontroller.core.Service, LocationListener, GpsStatus.Listener, GpsStatus.NmeaListener
 {
-  public OnboardGPS Create(Context context)
+  public static OnboardGPS Create(Context context)
   {
-    if (sInstance != null)
+    if (sInstance == null)
       sInstance = new OnboardGPS(context);
     
     return sInstance;
@@ -76,17 +76,15 @@ public class OnboardGPS implements core.Service, LocationListener, GpsStatus.Lis
     return "OnboardGPS";
   }
   
-  /*
   @Override
   public void onNmeaReceived(long timestamp, String nmea)
   {
   }
-  */
   
   private boolean resetLocationListener()
   { 
     mLocationManager.addGpsStatusListener(this);
-    //mLocationManager.addNmeaListener(this);
+    mLocationManager.addNmeaListener(this);
     
     mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
         mMinIntervalMs, mMinDistanceBeforeUpdateM, this);
@@ -99,5 +97,5 @@ public class OnboardGPS implements core.Service, LocationListener, GpsStatus.Lis
   int mMinDistanceBeforeUpdateM;
   GpsStatus mGpsStatus;
   
-  OnboardGPS sInstance;
+  static OnboardGPS sInstance;
 }
