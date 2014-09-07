@@ -1,8 +1,8 @@
 package balloon.flightcontroller.services;
 
 import balloon.flightcontroller.Application;
-import balloon.flightcontroller.core.*;
 import balloon.flightcontroller.core.System;
+import balloon.flightcontroller.core.*;
 import balloon.flightcontroller.services.*;
 import android.location.*;
 
@@ -18,15 +18,18 @@ public class PeriodicGPSLocationLog implements Service
   
   public PeriodicGPSLocationLog()
   {
-    mLoggingPeriodMs = DEFAULT_LOGGING_PERIOD_MS;
-    
-    OnboardGPS onboardGps = System.GetInstance().getService(Application.WellKnownSystemPaths.OnboardGps);
-    mLastKnownLocation = onboardGps.getCurrentLocation();
   }
   
   private void log()
   {
-    //Log.Info(mLastKnownLocation);
+    if (mOnboardGPSService == null)
+      mOnboardGPSService = System.GetInstance().getService(WellKnownServices.OnboardGps);
+    if (mOnboardGPSService != null)
+      mLastKnownLocation = mOnboardGPSService.getCurrentLocation();
+    if (mLastKnownLocation != null)
+      Log.Info(mLastKnownLocation);
+    else
+      Log.Info("Unknown position");
   }
   
   public boolean start()
@@ -61,8 +64,9 @@ public class PeriodicGPSLocationLog implements Service
     return true;
   }
   
+  private OnboardGPS mOnboardGPSService; 
   private Location mLastKnownLocation;
-  private int mLoggingPeriodMs;
+  private int mLoggingPeriodMs = DEFAULT_LOGGING_PERIOD_MS;
   private ScheduledFuture mPositionLoggerHandler;
   private final ScheduledExecutorService mScheduler = 
       Executors.newScheduledThreadPool(PERIODIC_SCHEDULER_POOL_SIZE);

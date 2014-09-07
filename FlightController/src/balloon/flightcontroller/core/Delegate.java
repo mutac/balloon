@@ -8,7 +8,7 @@ public class Delegate
 {
   public Delegate(Object obj, String methodName)
   {
-    mMethodTable = new HashMap<String, Method>();
+    mOverloadedMethodTable = new HashMap<String, Method>();
     mObj = obj;
     mMethodName = methodName;
   }
@@ -60,9 +60,9 @@ public class Delegate
   {
     String argHash = argTypes.toString();
     
-    if (mMethodTable.containsKey(argHash))
+    if (mOverloadedMethodTable.containsKey(argHash))
     {
-      return mMethodTable.get(argHash);
+      return mOverloadedMethodTable.get(argHash);
     }
     else
     {
@@ -77,7 +77,7 @@ public class Delegate
         throw new MethodNotFoundException(mObj, mMethodName, argTypes);
       }
       
-      mMethodTable.put(argHash, meth);
+      mOverloadedMethodTable.put(argHash, meth);
       return meth;
     }
   }
@@ -85,7 +85,7 @@ public class Delegate
   //
   // Class properties
   //
-  private Map<String, Method> mMethodTable;
+  private Map<String, Method> mOverloadedMethodTable;
   private Object mObj;
   private String mMethodName;
   

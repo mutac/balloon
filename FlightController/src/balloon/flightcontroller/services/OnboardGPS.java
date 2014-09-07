@@ -1,23 +1,19 @@
 package balloon.flightcontroller.services;
 
+import balloon.flightcontroller.core.*;
 import android.content.*;
 import android.os.*;
 import android.location.*;
 
 public class OnboardGPS implements balloon.flightcontroller.core.Service, LocationListener, GpsStatus.Listener, GpsStatus.NmeaListener
-{
-  public static OnboardGPS Create(Context context)
-  {
-    if (sInstance == null)
-      sInstance = new OnboardGPS(context);
-    
-    return sInstance;
-  }
+{  
+  private final int MIN_UPDATE_INTERVAL_MS = 100;
+  private final int MIN_DISTANCE_BEFORE_UPDATE_M = 0;
   
-  private OnboardGPS(Context context)
+  public OnboardGPS(Context context)
   {
-    mMinIntervalMs = 1000;
-    mMinDistanceBeforeUpdateM = 0;
+    mMinIntervalMs = MIN_UPDATE_INTERVAL_MS;
+    mMinDistanceBeforeUpdateM = MIN_DISTANCE_BEFORE_UPDATE_M;
     
     mLocationManager = (LocationManager) 
         context.getSystemService(Context.LOCATION_SERVICE);
@@ -71,9 +67,14 @@ public class OnboardGPS implements balloon.flightcontroller.core.Service, Locati
     }
   }
   
+  public Location getCurrentLocation()
+  {
+    return mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+  }
+  
   public String getName()
   {
-    return "OnboardGPS";
+    return OnboardGPS.class.getName();
   }
   
   @Override
@@ -109,6 +110,4 @@ public class OnboardGPS implements balloon.flightcontroller.core.Service, Locati
   int mMinIntervalMs;
   int mMinDistanceBeforeUpdateM;
   GpsStatus mGpsStatus;
-  
-  static OnboardGPS sInstance;
 }
